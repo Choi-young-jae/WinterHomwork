@@ -25,6 +25,14 @@
         <activity android:name=".CowDetailView"/>
         <activity android:name=".CowDetailInput"/>
 
+        <receiver android:name=".AlarmReceive"
+            android:label="returnAlram">
+            <intent-filter>
+                <action android:name="com.example.user.samplealram" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

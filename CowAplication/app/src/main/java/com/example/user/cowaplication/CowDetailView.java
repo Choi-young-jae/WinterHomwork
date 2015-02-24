@@ -1,5 +1,9 @@
 package com.example.user.cowaplication;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -22,6 +26,7 @@ import java.util.Date;
  */
 public class CowDetailView extends FragmentActivity{
     public static final String TAG = "CowDetailShowActivity";
+    public static int ALARMCOUNT = 0;
     TextView txtMsg1; //상세 설명을 저장할 공간이다.
     TextView txtMsg2; //메모를 기록할 공간이다.
     TextView numberMsg; //list로 부터 받아온 번호
@@ -31,6 +36,8 @@ public class CowDetailView extends FragmentActivity{
     TextView setwork; //일정을 등록할 부분이다.
     private CaldroidFragment dialogCaldroidFragment; //달력을 위한 오픈 소스 사용
     private CaldroidFragment caldroidFragment;
+    WorkSetDialog SetDateDialog;
+
     public static final int REQUEST_CODE_DETAIL = 1003;
 
     //달력 출력 관련 부분
@@ -61,7 +68,7 @@ public class CowDetailView extends FragmentActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cowdetail);
 
-        final SimpleDateFormat formatter = new SimpleDateFormat("yyyy MMM dd");
+        final SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd/");
         caldroidFragment = new CaldroidFragment();
 
         txtMsg1 = (TextView)findViewById(R.id.txtMsg1);
@@ -100,11 +107,33 @@ public class CowDetailView extends FragmentActivity{
                         "Long click " + formatter.format(date),
                         Toast.LENGTH_SHORT).show();
 
-                String[] Token = formatter.format(date).split(" ");
-                String dat_str = Token[0] + "년 " + Token[1] + " " + Token[2] + "일";
-                Log.d("longClick split ", Token[0] + " " + Token[1] + " / " + Token[2]);
+                //String[] Token = formatter.format(date).split(" ");
+                //String dat_str = Token[0] + "/" + Token[1] + "/" + Token[2] + "/";
+                String dat_str = formatter.format(date);
+                Log.d("longClick split ", dat_str);
 
                 dialogCaldroidFragment.dismiss();
+
+                SetDateDialog = new WorkSetDialog(CowDetailView.this,dat_str);
+                SetDateDialog.setTitle("시간을 정해주세요");
+                SetDateDialog.show();
+
+
+                SetDateDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        String DaySplit[] = SetDateDialog.retunContent().split("/");
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set( Integer.valueOf(DaySplit[0]), Integer.valueOf(DaySplit[1]) - 1,
+                                Integer.valueOf(DaySplit[2]),  Integer.valueOf(DaySplit[3]),  Integer.valueOf(DaySplit[4]));
+
+                        Log.d("Alram Set",Integer.valueOf(DaySplit[0]) + " / " + (Integer.valueOf(DaySplit[1]) - 1) + " / " +
+                                Integer.valueOf(DaySplit[2]) + " / "  + Integer.valueOf(DaySplit[3])+ " / " +  Integer.valueOf(DaySplit[4]));
+
+                        setAlarm(CowDetailView.this, calendar);
+                        setwork.setText(SetDateDialog.retunContent());
+                    }
+                });
 
             }
 
@@ -160,11 +189,28 @@ public class CowDetailView extends FragmentActivity{
                         dialogTag);
             }
         });
-
-
-
-
     }
+    // 알람 등록
+    private void setAlarm(Context context, Calendar calendar)
+    {
+        Log.i(TAG, "setAlarm()");
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(CowDetailView.this,
+                AlarmReceive.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("data1",numberMsg.getText().toString());
+        bundle.putString("data2",sexMsg.getText().toString());
+        bundle.putString("data3",birthdayMsg.getText().toString());
+        bundle.putString("data0",locationMsg.getText().toString());
+        bundle.putInt("alarmnum",ALARMCOUNT);
+
+        intent.putExtras(bundle);
+
+        PendingIntent pIntent = PendingIntent.getBroadcast(context, ALARMCOUNT, intent, 0);
+        alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pIntent);
+        ALARMCOUNT++;
+    }
+
     public void printString(Bundle bundle)
     {
         Log.d(null,"printString Come");
