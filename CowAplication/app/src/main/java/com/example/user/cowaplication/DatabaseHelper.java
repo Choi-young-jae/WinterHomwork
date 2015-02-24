@@ -28,7 +28,6 @@ public class DatabaseHelper {
         }
         catch (SQLiteException ex)
         {
-            //Toast.makeText(this, ex.getMessage(), 1).show();
             Log.d("DataBase open fail","fail");
         }
     }

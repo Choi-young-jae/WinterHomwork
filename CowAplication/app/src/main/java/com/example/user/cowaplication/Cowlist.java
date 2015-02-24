@@ -2,12 +2,13 @@ package com.example.user.cowaplication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,14 +23,11 @@ public class Cowlist extends Activity{
 
     ArrayList<listdata> datalist;
     AbstractAdapter adapter;
-    EditText name; //텍스트 버튼에서 입력한 이름
-    EditText number; //텍스트 버튼에서 적은 번호
     ListView list; //소의 목록을 출력해줄 리스트
     boolean deleteitem = false;
     TextView hiddentext;
 
     public static final int REQUEST_CODE_ANOTHER = 1002;
-    public static final int REQUEST_CODE_DETAIL = 1005;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +38,46 @@ public class Cowlist extends Activity{
         list = (ListView)findViewById(R.id.showcowlist);
         hiddentext = (TextView)findViewById(R.id.hiddenid);
         adapter = new AbstractAdapter(this);
+
+        //DatabaseHelper클래스에서 DB를 열고 테이블을 만드는 과정이다.
+        try {
+            DatabaseHelper.openDatabase(DatabaseHelper.dbname); //dbopen
+            DatabaseHelper.createCowListTable(); //createTable
+            showAllcontent(); //show content in table
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            Toast toast2 = Toast.makeText(this,"database is not created.",Toast.LENGTH_LONG);
+            toast2.show();
+        }
+
+        //리스트에 있는 아이템을 클릭 했을 경우 발생되는 이벤트 이다.
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            public void onItemClick(AdapterView parent, View v, int position, long id)
+            {
+                String str_1 = ((TextView)v.findViewById(R.id.listlocation)).getText().toString();
+                String str_2 = ((TextView)v.findViewById(R.id.listnumber)).getText().toString();
+                String str_3 = ((TextView)v.findViewById(R.id.listbirthday)).getText().toString();
+                String str_4 = ((TextView)v.findViewById(R.id.listsex)).getText().toString();
+
+                Log.d("tab! ",deleteitem + "");
+
+                if(deleteitem)
+                {
+                    Log.d("Delete mode! ","delete now");
+                    listdata deletedata = new listdata(str_1,str_2,str_3,str_4);
+                    DatabaseHelper.deleteData(deletedata);
+                    adapter.deleteAllcontent();
+                    showAllcontent();
+                    hiddentext.setVisibility(View.INVISIBLE);
+                    deleteitem = false;
+                }
+                else
+                {
+
+                }
+            }
+        });
     }
 
     public void Onbutton2click(View v)
@@ -84,25 +122,33 @@ public class Cowlist extends Activity{
             toast.show();
 
             if (resultCode == RESULT_OK) {
-                //OK버튼이 호출되었을 경우 전해받은 intent로 부터 데이터틑 받은뒤 이를 어댑터에 셋팅하여 출력해줌
-                Log.d("onActivityResult"," Call OK button");
-
                 String send_location = intent.getExtras().getString("location");
                 String send_number = intent.getExtras().getString("number");
                 String send_sex = intent.getExtras().getString("sex");
                 String send_birthday = intent.getExtras().getString("birthday");
-
+                DatabaseHelper.insertData(new listdata(send_location,send_number,send_birthday,send_sex));
                 adapter.addItem(new listdata(send_location, send_number, send_birthday, send_sex));
-                list.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+
+                adapter.notifyDataSetChanged(); //adapter의 내용이 변한다면 이를 적용시켜준다.
             }
         }
-        else if(requestCode == REQUEST_CODE_DETAIL)
+    }
+
+    //DB의 내용을 전부 출력시켜주는 함수이다.
+    public void showAllcontent()
+    {
+        Log.d("SelectName" , "name");
+        String aSQL = "select location, number,sex,birthday  from " + DatabaseHelper.tablename;
+        Cursor cursor = DatabaseHelper.db.query(DatabaseHelper.tablename,null,null,null,null,null,null);
+        int db_count = cursor.getCount();
+        Toast toast1 = Toast.makeText(this, "database is created. have " + db_count, Toast.LENGTH_LONG);
+        toast1.show();
+        cursor.moveToFirst();
+        for(int i=0; i<db_count; i++)
         {
-            Toast toast = Toast.makeText(getBaseContext(), "onActivityResult() 메소드가 호출됨. 요청코드 : " + requestCode + ", 결과코드 : " + resultCode, Toast.LENGTH_LONG);
-            toast.show();
-            Log.d(null,"detail return");
-            adapter.deleteAllcontent();
+            adapter.addItem(new listdata(cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getString(4)));
+            list.setAdapter(adapter);
+            cursor.moveToNext();
         }
     }
 }
