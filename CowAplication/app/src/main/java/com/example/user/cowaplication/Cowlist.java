@@ -28,6 +28,7 @@ public class Cowlist extends Activity{
     TextView hiddentext;
 
     public static final int REQUEST_CODE_ANOTHER = 1002;
+    public static final int REQUEST_CODE_DETAIL = 1005;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class Cowlist extends Activity{
         try {
             DatabaseHelper.openDatabase(DatabaseHelper.dbname); //dbopen
             DatabaseHelper.createCowListTable(); //createTable
+            DatabaseHelper.createDetailTable(); //createDetail
             showAllcontent(); //show content in table
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -74,7 +76,17 @@ public class Cowlist extends Activity{
                 }
                 else
                 {
+                    Log.d("Detail mode! ","detail show");
+                    Bundle bundle = new Bundle();
+                    bundle.putString("data0",str_1);
+                    bundle.putString("data1",str_2);
+                    bundle.putString("data2",str_3);
+                    bundle.putString("data3",str_4);
 
+                    Log.d("SetOnItemClickListenr", str_1 + " / "+ str_2);
+                    Intent intnet = new Intent(getApplicationContext(), CowDetailView.class);
+                    intnet.putExtras(bundle);
+                    startActivityForResult(intnet,REQUEST_CODE_DETAIL);
                 }
             }
         });
@@ -131,6 +143,14 @@ public class Cowlist extends Activity{
 
                 adapter.notifyDataSetChanged(); //adapter의 내용이 변한다면 이를 적용시켜준다.
             }
+        }
+        else if(requestCode == REQUEST_CODE_DETAIL)
+        {
+            Toast toast = Toast.makeText(getBaseContext(), "onActivityResult() 메소드가 호출됨. 요청코드 : " + requestCode + ", 결과코드 : " + resultCode, Toast.LENGTH_LONG);
+            toast.show();
+            Log.d(null,"detail return");
+            adapter.deleteAllcontent();
+            showAllcontent();
         }
     }
 
