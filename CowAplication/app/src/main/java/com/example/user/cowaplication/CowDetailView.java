@@ -206,9 +206,8 @@ public class CowDetailView extends FragmentActivity{
         Log.d("detail memos  ",memos);
 
         txtMsg1.setText("\n");
-        txtMsg1.append(details+" \n");
+        txtMsg1.append(details);
         txtMsg2.setText(memos);
-        txtMsg2.append("\n---------------------------------");
         outCoursor.close();
 
     }
@@ -220,6 +219,15 @@ public class CowDetailView extends FragmentActivity{
     public void onModifibuttonClicked(View v)
     {
         Intent intent = new Intent(getBaseContext(),CowDetailInput.class);
+
+        intent.putExtra("location",locationMsg.getText().toString());
+        intent.putExtra("number",numberMsg.getText().toString());
+        intent.putExtra("sex",sexMsg.getText().toString());
+        intent.putExtra("birthday",birthdayMsg.getText().toString());
+        intent.putExtra("detail",txtMsg1.getText().toString());
+        intent.putExtra("memo",txtMsg2.getText().toString());
+
+        Log.d("input intent start"," input start");
         startActivityForResult(intent, REQUEST_CODE_DETAIL);
     }
 
