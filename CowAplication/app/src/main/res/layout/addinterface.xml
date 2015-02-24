@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/locationlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="축사 번호"
+            android:id="@+id/textView"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp" />
+        <EditText
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="축사 번호를 입력해 주세요"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@+id/textView"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/numberlayout"
+        android:layout_below="@+id/locationlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="관리 번호"
+            android:id="@+id/textView2"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            />
+        <EditText
+            android:id="@+id/cownumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="관리 번호를 입력해 주세요"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@+id/textView2"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/sexlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/numberlayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="성별"
+            android:id="@+id/textView3"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            />
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/textView3"
+            android:orientation="horizontal"
+            android:id="@+id/radioGroup">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="암"
+                    android:id="@+id/radioButton" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="수"
+                    android:id="@+id/radioButton2" />
+        </RadioGroup>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/birthdaylayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sexlayout">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="태어난 날짜"
+            android:id="@+id/textView4"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp" />
+        <EditText
+            android:id="@+id/birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="태어난 날짜를 입력해 주세요"
+            android:inputType="date"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_toRightOf="@+id/textView"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/savecancellayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/birthdaylayout">
+        <Button
+            android:id="@+id/save_btn"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="저장하기"
+            android:layout_weight="1"
+            android:onClick="onSaveButtonClicked" />
+        <Button
+            android:id="@+id/cencal_btn"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="취소하기"
+            android:layout_weight="1" />
+        </LinearLayout>
+</RelativeLayout>

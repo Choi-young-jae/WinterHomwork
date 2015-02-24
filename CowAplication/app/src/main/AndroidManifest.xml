@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".Cowlist"/>
         <activity android:name=".Cowprice"/>
+        <activity android:name=".CowAdd"/>
+
 
     </application>
 
