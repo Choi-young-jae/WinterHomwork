@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -24,6 +25,7 @@
         <activity android:name=".CowAdd"/>
         <activity android:name=".CowDetailView"/>
         <activity android:name=".CowDetailInput"/>
+        <activity android:name=".Cowprice_dif"/>
 
         <receiver android:name=".AlarmReceive"
             android:label="returnAlram">

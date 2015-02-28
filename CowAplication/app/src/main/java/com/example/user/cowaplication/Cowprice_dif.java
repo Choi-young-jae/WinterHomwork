@@ -1,7 +1,6 @@
 package com.example.user.cowaplication;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,34 +21,31 @@ import java.util.ArrayList;
 /**
  * Created by user on 2015-02-24.
  */
-public class Cowprice extends Activity{
+public class Cowprice_dif extends Activity{
 
-    public static final String TAG = "Parsing";
+    TextView textView;
+    public static final String TAG = "ParsingTest";
+    private String rssUrl;
     private EditText edittext;
     private static Thread thread = null;
-    private Source source;
+    private Source source_dif;
     private ArrayList<String> array;
     TextView tabletext;
-    int curtableid = R.id.table1;
-    public static final int REQUEST_CODE_PRICEDIF = 1004;
-
+    int curtableid = R.id.tabledif1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.cowprice);
-
-        edittext = (EditText)findViewById(R.id.edit01);
-        //실시간 소의 가격을 불러올 주소이다.
-        edittext.setText("http://www.ekapepia.com/user/priceStat/realTimeCowBody.do");
+        setContentView(R.layout.cowprice_dif);
+        edittext = (EditText)findViewById(R.id.edit_dif);
+        edittext.setText("http://www.ekapepia.com/user/priceStat/periodCowAuctionPrice.do");
         Log.d(TAG, " onCreate");
         Button show_btn = (Button) findViewById(R.id.show_btn);
         show_btn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
 
-                //쓰레드에 등록할 핸들러를 구현한다.
                 Runnable task = new Runnable() {
                     String inputStr = edittext.getText().toString();
                     @Override
@@ -58,7 +54,6 @@ public class Cowprice extends Activity{
                         getData(inputStr);
                     }
                 };
-                Log.d(null,"treadstart");
                 thread = new Thread(task);
                 thread.start();
 
@@ -69,10 +64,9 @@ public class Cowprice extends Activity{
                 {
                     Log.d(TAG,e.toString());
                 }
-
                 for(int i=0; i<array.size(); i++)
                 {
-                    tabletext = (TextView)findViewById(curtableid); //해당하는 칸에 얻어온 숫자를 하나씩 기입한다.
+                    tabletext = (TextView)findViewById(curtableid);
                     tabletext.setText(array.get(i));
                     curtableid++;
                 }
@@ -86,22 +80,29 @@ public class Cowprice extends Activity{
         array = new ArrayList();
         try
         {
+            Log.d(TAG,  " Start..");
             nURL = new URL(strURL);
-            source = new Source(nURL);
-            Element table = (Element) source.getAllElements(HTMLElementName.TABLE).get(2); //사이트 에서 TABLE태그를 가진것중 세번째 것을 불러온다.
-            int tr_count = table.getAllElements(HTMLElementName.TR).size(); //얻어온 테이블 에서 전체 TR의 갯수를 센다
-            Element tr = null;
+            Log.d(TAG,  " URL update");
+            source_dif = new Source(nURL);
+            Log.d(TAG,  " Source Create");
+            Element table_dif = (Element) source_dif.getAllElements(HTMLElementName.TABLE).get(0);
+            Log.d(TAG,  " Get table");
+            int tr_count_dif = table_dif.getAllElements(HTMLElementName.TR).size();
+            Log.d(TAG,  " Get tr" + tr_count_dif);
+            Element tr_dif = null;
+
             ArrayList<String> hm = null;
-            //사이트 소스 코드를 분석했을때 내가 필요한 tr은 세번째 부터 시작한다.
-            for(int i=2; i<tr_count; i++)
+            for(int i=2; i<tr_count_dif; i++)
             {
-                tr = (Element) table.getAllElements(HTMLElementName.TR).get(i); //i번째 tr을 불러온다.
-                int td_count = tr.getAllElements(HTMLElementName.TD).size(); //불러온 tr의 전체 td를 센다.
+                Log.d(TAG,  i + " tr loop");
+                tr_dif = (Element) table_dif.getAllElements(HTMLElementName.TR).get(i);
+                //Log.d(TAG,  " Get tr");
+                int td_count_dif = tr_dif.getAllElements(HTMLElementName.TD).size();
+                Log.d(TAG,  td_count_dif + " Get td");
                 hm = new ArrayList<String>();
-                for(int j=0; j<td_count; j++)
+                for(int j=0; j<td_count_dif; j++)
                 {
-                    //td의 원소를 hm에 저장한다.
-                    hm.add(((Element) tr.getAllElements(HTMLElementName.TD).get(j)).getContent().toString());
+                    hm.add(((Element) tr_dif.getAllElements(HTMLElementName.TD).get(j)).getContent().toString());
                 }
                 println(hm);
             }
@@ -113,14 +114,6 @@ public class Cowprice extends Activity{
         }
         return array;
     }
-
-    public void onButtonPeridClicked(View v)
-    {
-        // 웹 파싱을 통해 정보를 얻어오는 새로운 인텐트를 생성
-        Intent intent = new Intent(getBaseContext(), Cowprice_dif.class);
-        startActivityForResult(intent, REQUEST_CODE_PRICEDIF);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -144,14 +137,21 @@ public class Cowprice extends Activity{
     }
     private void println(ArrayList<String> hm) {
 
+        Log.d(null, "Println");
         int nuumber = hm.size();
         String returnString = "";
-        for(int i=1; i<nuumber; i++)
-        {
-            //얻어온 원소들을 하나씩 저장한다.
-            array.add(hm.get(i));
-            returnString = returnString + hm.get(i) + " / ";
+        for (int i = 0; i < nuumber; i++) {
+            String addstr = "";
+            if (hm.get(i).compareTo("") != 0) {
+                String split[] = hm.get(i).split("<br/>");
+
+                for (int j = 0; j < split.length; j++) {
+                    addstr = addstr + split[j];
+                }
+            }
+            array.add(addstr);
+            Log.d("array size count", array.size() + "");
+            returnString = returnString + addstr + " / ";
         }
-        Log.d(TAG, returnString);
     }
 }

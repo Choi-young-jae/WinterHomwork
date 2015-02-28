@@ -25,7 +25,7 @@ public class AlarmReceive extends BroadcastReceiver {
         int getalarmnum = bundle.getInt("alarmnum");
 
         Log.d(null,"Alram return " + getalarmnum + "!");
-
+        Log.d("Get data",bundle.getString("data0") + " " + bundle.getString("data1") + " " + bundle.getString("data2") +" " +  bundle.getString("data3"));
 
         Toast.makeText(context, "Alarm Received!", Toast.LENGTH_LONG).show();
         NotificationManager notifier = (NotificationManager) context
@@ -34,20 +34,19 @@ public class AlarmReceive extends BroadcastReceiver {
         Notification notify = new Notification(android.R.drawable.btn_star, "text",
                 System.currentTimeMillis());
 
-
-
-        Bundle bundle2 = intent.getExtras();
-
         Intent intent2 = new Intent(context, CowDetailView.class);
 
-        intent2.putExtras(bundle2);
+        intent2.putExtras(bundle);
 
         PendingIntent pender = PendingIntent
                 .getActivity(context, getalarmnum, intent2, 0);
+
         Log.d("alarmcount ",getalarmnum + "");
         getalarmnum++;
 
-        notify.setLatestEventInfo(context, bundle2.getString("data0"), bundle2.getString("data1"), pender);
+        notify.setLatestEventInfo(context, bundle.getString("data0"), bundle.getString("data1"), pender);
+
+        DatabaseHelper.db.execSQL("update " + DatabaseHelper.workname + " set resetNum = 'YES' where cownumber = '" + bundle.getString("data1") + "';");
 
         notify.flags |= Notification.FLAG_AUTO_CANCEL;
         notify.vibrate = new long[] { 200, 200, 500, 300 };

@@ -20,6 +20,7 @@ public class WorkSetDialog extends Dialog implements View.OnTouchListener{
     private Button hourup,hourdown;
     private Button minup,mindown;
     private TextView yearText;
+    private EditText Memo;
     String year;
     Button ok_btn;
 
@@ -34,7 +35,7 @@ public class WorkSetDialog extends Dialog implements View.OnTouchListener{
     }
     public String retunContent()
     {
-        String return_str = yearText.getText().toString() + hour.getText().toString() + "/" + min.getText().toString();
+        String return_str = yearText.getText().toString() + hour.getText().toString() + "//" + min.getText().toString() + "//" + Memo.getText().toString();
         return return_str;
     }
 
@@ -46,6 +47,7 @@ public class WorkSetDialog extends Dialog implements View.OnTouchListener{
         hour = (EditText) findViewById(R.id.hour);
         min = (EditText) findViewById(R.id.min);
         yearText = (TextView)findViewById(R.id.setupdate);
+        Memo = (EditText)findViewById(R.id.memo);
 
         hourup = (Button)findViewById(R.id.hourplus);
         hourdown = (Button)findViewById(R.id.houtmius);
