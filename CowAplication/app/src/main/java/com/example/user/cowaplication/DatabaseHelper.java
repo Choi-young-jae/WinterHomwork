@@ -11,9 +11,10 @@ import android.util.Log;
 public class DatabaseHelper {
 
     public static SQLiteDatabase db;
-    public static String dbname = "/storage/sdcard0/CowHandler.db";
+    public static String dbname = "/storage/sdcard0/Handler.db";
     public static String tablename = "cowlist"; //소의 목록을 저장 하기 위한 테이블
     public static String detailname = "detaillist"; //클릭 하였을 경우 세부정보를 보여줄 테이블
+    public static String workname = "worklist"; //일정을 저장할 테이블
 
     public DatabaseHelper()
     {
@@ -74,9 +75,31 @@ public class DatabaseHelper {
             Log.d("Create detail fail","table make fail");
         }
     }
+    public static void createWorktable()
+    {
+        try{
+            Log.d("Create work table ","table make");
+            db.execSQL("create table if not exists " + workname + "("
+                    + " _id integer PRIMARY KEY autoincrement, "
+                    + " cownumber text,"
+                    + " year text,"
+                    + " month text, "
+                    + " day text, "
+                    + " hour text, "
+                    + " min text, "
+                    + " simplememo text, "
+                    + " resetNum text);");
+        }
+        catch(Exception ext)
+        {
+            Log.d("Create table fail","table make fail");
+        }
+    }
     public static boolean insertData(listdata insertdata)
     {
         String none = "내용을 입력해 주세요.";
+        String nowork = "지금은 일정이 없어요.";
+        String test = "---";
         db.execSQL("insert into " + tablename + "(location, number, sex, birthday) values (" +
                 "'" + insertdata.location + "'," +
                 "'" + insertdata.number + "'," +
@@ -86,6 +109,16 @@ public class DatabaseHelper {
                 "'" + insertdata.number + "'," +
                 "'" + none + "'," +
                 "'" +  none + "');");
+        db.execSQL("insert into " + workname + "(cownumber, year, month, day, hour, min,simplememo,resetNum) values (" +
+                "'" + insertdata.number + "'," +
+                "'" + test + "'," +
+                "'" + test + "'," +
+                "'" + test + "'," +
+                "'" + test + "'," +
+                "'" + test + "'," +
+                "'" + nowork + "'," +
+                "'NO');");
+
         return true;
     }
     public static boolean deleteData(listdata deletedata)
@@ -122,5 +155,47 @@ public class DatabaseHelper {
                 "' where number = '" + defualtnumber + "';");
         db.execSQL("update " + detailname + " set number = '" + modifynumber +
                 "' where number = '" + defualtnumber + "';");
+    }
+    public static boolean setWorkDB(String daySplit[],String cownum)
+    {
+
+        Log.d("workname table",daySplit[0] + " / " + daySplit[1] + " / " + daySplit[2] + " / " + daySplit[3] + " / " + daySplit[4] + " / " + daySplit[5]);
+
+        db.execSQL("update " + workname + " set year = '" + daySplit[0] +
+                "' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname  + " set month = '" + daySplit[1] +
+                "' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname + " set day = '" + daySplit[2] +
+                "' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname + " set hour = '" + daySplit[3] +
+                "' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname + " set min = '" + daySplit[4] +
+                "' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname + " set simplememo = '" + daySplit[5] +
+                "' where cownumber = '" + cownum + "';" );
+
+
+        Log.d(null,"Update Db " + workname);
+        return true;
+    }
+    public static void resetWork(String cownum)
+    {
+        Log.d(null,cownum + " reset Start!");
+
+        String reset = "--";
+        db.execSQL("update " + workname + " set year = '" + reset +
+                "' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname  + " set month = '" +reset +
+                "' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname + " set day = '" + reset +
+                "' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname + " set hour = '" + reset +
+                "' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname + " set min = '" +reset +
+                "' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname + " set simplememo = '지금은 일정이 없어요.' where cownumber = '" + cownum + "';" );
+        db.execSQL("update " + workname + " set resetNum = 'NO' where cownumber = '" + cownum + "';" );
+
+        Log.d(null,"Update Db " + workname);
     }
 }

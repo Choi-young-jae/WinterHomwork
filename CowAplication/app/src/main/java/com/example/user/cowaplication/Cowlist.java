@@ -45,6 +45,7 @@ public class Cowlist extends Activity{
             DatabaseHelper.openDatabase(DatabaseHelper.dbname); //dbopen
             DatabaseHelper.createCowListTable(); //createTable
             DatabaseHelper.createDetailTable(); //createDetail
+            DatabaseHelper.createWorktable(); //createWork
             showAllcontent(); //show content in table
         } catch(Exception ex) {
             ex.printStackTrace();
@@ -86,6 +87,8 @@ public class Cowlist extends Activity{
                     Log.d("SetOnItemClickListenr", str_1 + " / "+ str_2);
                     Intent intnet = new Intent(getApplicationContext(), CowDetailView.class);
                     intnet.putExtras(bundle);
+                    DatabaseHelper.closeDatabase();
+
                     startActivityForResult(intnet,REQUEST_CODE_DETAIL);
                 }
             }
