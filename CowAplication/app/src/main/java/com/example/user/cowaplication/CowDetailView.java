@@ -37,8 +37,11 @@ public class CowDetailView extends FragmentActivity{
     private CaldroidFragment dialogCaldroidFragment; //달력을 위한 오픈 소스 사용
     private CaldroidFragment caldroidFragment;
     WorkSetDialog SetDateDialog;
+    Bundle findbundle;
+
 
     public static final int REQUEST_CODE_DETAIL = 1003;
+    public static final int REQUEST_CODE_FAMILY = 1008;
 
     //달력 출력 관련 부분
     private void setCustomResourceForDates() {
@@ -66,8 +69,9 @@ public class CowDetailView extends FragmentActivity{
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.cowdetail);
+
+
         DatabaseHelper.openDatabase(DatabaseHelper.dbname);
 
         final SimpleDateFormat formatter = new SimpleDateFormat("yyyy//MM//dd//");
@@ -341,7 +345,11 @@ public class CowDetailView extends FragmentActivity{
 
     public void onNumberClicked(View v)
     {
+        //소의 번호를 눌럿을 경우 이의 혈통을 보여준다.
         Log.d("onNumberClicked : ",numberMsg.getText().toString());
+        Intent intent = new Intent(getBaseContext(),FindFamily.class);
+        intent.putExtra("cownum",numberMsg.getText().toString());
+        startActivityForResult(intent, REQUEST_CODE_FAMILY);
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);

@@ -26,6 +26,7 @@
         <activity android:name=".CowDetailView"/>
         <activity android:name=".CowDetailInput"/>
         <activity android:name=".Cowprice_dif"/>
+        <activity android:name=".FindFamily"/>
 
         <receiver android:name=".AlarmReceive"
             android:label="returnAlram">
