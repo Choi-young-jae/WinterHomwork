@@ -22,7 +22,7 @@ public class listdata {
     {
         location = str_location;
         number = str_number;
-        sex  = str_sex;
         birthday  = str_birthday;
+        sex  = str_sex;
     }
 }

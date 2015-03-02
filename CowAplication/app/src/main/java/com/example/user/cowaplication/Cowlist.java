@@ -141,8 +141,9 @@ public class Cowlist extends Activity{
                 String send_number = intent.getExtras().getString("number");
                 String send_sex = intent.getExtras().getString("sex");
                 String send_birthday = intent.getExtras().getString("birthday");
+                Log.d("Add new item",send_location + " " + send_number + " " + send_sex + " " + send_birthday);
                 DatabaseHelper.insertData(new listdata(send_location,send_number,send_birthday,send_sex));
-                adapter.addItem(new listdata(send_location, send_number, send_birthday, send_sex));
+                adapter.addItem(new listdata(send_location, send_number, send_sex,send_birthday));
 
                 adapter.notifyDataSetChanged(); //adapter의 내용이 변한다면 이를 적용시켜준다.
             }
@@ -169,6 +170,7 @@ public class Cowlist extends Activity{
         cursor.moveToFirst();
         for(int i=0; i<db_count; i++)
         {
+            Log.d("Show All content : ",i+"");
             adapter.addItem(new listdata(cursor.getString(1), cursor.getString(2),cursor.getString(3), cursor.getString(4)));
             list.setAdapter(adapter);
             cursor.moveToNext();

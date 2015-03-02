@@ -9,28 +9,25 @@
             android:id="@+id/listlocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"/>
+            android:padding="15dp"/>
         <TextView
             android:id="@+id/listnumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_toRightOf="@id/listlocation"
-            android:paddingRight="5dp"/>
+            android:padding="15dp"
+            android:layout_toRightOf="@id/listlocation"/>
         <TextView
             android:id="@+id/listbirthday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_toRightOf="@id/listnumber"
-            android:paddingRight="5dp"/>
+            android:padding="15dp"
+            android:layout_toRightOf="@id/listnumber"/>
         <TextView
             android:id="@+id/listsex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_toRightOf="@id/listbirthday"
-            android:paddingRight="5dp"/>
+            android:padding="15dp"
+            android:layout_toRightOf="@id/listbirthday"/>
         </RelativeLayout>
 
 </LinearLayout>

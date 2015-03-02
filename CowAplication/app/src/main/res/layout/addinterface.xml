@@ -11,7 +11,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="축사 번호"
+            android:text="축사 위치"
             android:id="@+id/textView"
             android:layout_marginTop="20dp"
             android:layout_marginStart="20dp" />
@@ -19,8 +19,7 @@
             android:id="@+id/location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:hint="축사 번호를 입력해 주세요"
+            android:hint="축사 위치를 입력해 주세요"
             android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
             android:layout_toRightOf="@+id/textView"/>
@@ -101,7 +100,7 @@
             android:id="@+id/textView4"
             android:layout_marginTop="20dp"
             android:layout_marginStart="20dp" />
-        <EditText
+        <TextView
             android:id="@+id/birthday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -109,7 +108,8 @@
             android:inputType="date"
             android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
-            android:layout_toRightOf="@+id/textView"/>
+            android:layout_toRightOf="@+id/textView"
+            android:onClick="onDataClicked"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/savecancellayout"
