@@ -81,10 +81,6 @@ public class CowDetailInput extends Activity {
         DatabaseHelper.modifyDetail(numberString,numberMsg_input.getText().toString(),txtMsg1_input.getText().toString(),txtMsg2_input.getText().toString());
 
         println("DB update Finish");
-        /*println(locationMsg_input.getText().toString() + " // " +
-                numberMsg_input.getText().toString() + " // " +
-                sexMsg_input.getText().toString() + " // " +
-                birthdayMsg_input.getText().toString());*/
 
         Intent resultIntent = new Intent(getApplicationContext(), CowDetailView.class);
         Bundle inputbundle = new Bundle();

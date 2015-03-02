@@ -1,6 +1,7 @@
 package com.example.user.cowaplication;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,9 @@ public class AbstractAdapter extends BaseAdapter{
         TextView sex = (TextView)view.findViewById(R.id.listsex);
         TextView birthday = (TextView)view.findViewById(R.id.listbirthday);
 
+        Log.d("getView",mItems.get(positoin).location + " , " + mItems.get(positoin).number + " "
+        + mItems.get(positoin).sex + " " + mItems.get(positoin).birthday);
+        
         location.setText(mItems.get(positoin).location);
         number.setText(mItems.get(positoin).number);
         sex.setText(mItems.get(positoin).sex);

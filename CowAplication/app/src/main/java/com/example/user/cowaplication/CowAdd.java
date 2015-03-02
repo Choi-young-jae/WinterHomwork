@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 /**
  * Created by user on 2015-02-15.
@@ -22,7 +23,9 @@ public class CowAdd extends Activity {
     EditText number;
     RadioGroup sex;
     String convert_sex;
-    EditText birthday;
+    TextView birthday;
+    ShowCalendar simplecal;
+    public static final int REQUEST_CODE_CALENDAR = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +35,15 @@ public class CowAdd extends Activity {
         locatoin = (EditText)  findViewById(R.id.location);
         number = (EditText) findViewById(R.id.cownumber);
         sex = (RadioGroup)findViewById(R.id.radioGroup);
-        birthday = (EditText)findViewById(R.id.birthday);
+        birthday = (TextView)findViewById(R.id.birthday);
         save_Btn = (Button) findViewById(R.id.save_btn);
+        simplecal = new ShowCalendar();
+    }
+    public void onDataClicked(View v)
+    {
+        Intent intent = new Intent(getBaseContext(), ShowCalendar.class);
+        startActivityForResult(intent, REQUEST_CODE_CALENDAR);
+        Log.d(null,"return to ondate Clicked");
     }
 
 
@@ -92,5 +102,22 @@ public class CowAdd extends Activity {
         // 응답을 전달하고 이 액티비티를 종료합니다.
         setResult(RESULT_OK, resultIntent);
         finish();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        Log.d(null,"Return DB changed");
+
+        if (requestCode == REQUEST_CODE_CALENDAR) {
+
+            if (resultCode == RESULT_OK) {
+                Bundle bundle = intent.getExtras();
+                Log.d(null,"REQUEST_CODE_CALENDAR()");
+                String day_str = bundle.getString("returnday");
+                String[] datesplit = day_str.split("//");
+                birthday.setText(datesplit[0]+ " / " + datesplit[1] + " / " + datesplit[2]);
+            }
+        }
     }
 }
