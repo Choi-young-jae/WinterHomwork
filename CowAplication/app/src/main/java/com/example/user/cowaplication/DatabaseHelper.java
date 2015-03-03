@@ -36,6 +36,7 @@ public class DatabaseHelper {
     }
     public static void closeDatabase() {
         try {
+            Log.d("DB close","Close");
             // close database
             db.close();
         } catch(Exception ext) {
@@ -123,11 +124,14 @@ public class DatabaseHelper {
     }
     public static boolean deleteData(listdata deletedata)
     {
-        String aSQL = "select location, number, sex, birthday"
-                + " from " + tablename
-                + " where number like ?";
         String delnum = deletedata.number;
+        openDatabase(detailname);
+        openDatabase(workname);
+
         db.delete(tablename,"number=?",new String[]{delnum});
+        db.delete(detailname,"number=?",new String[]{delnum});
+        db.delete(workname,"cownumber=?",new String[]{delnum});
+
         return true;
     }
     public static void modifyTable(listdata defaultdata, listdata changeName)
@@ -158,7 +162,6 @@ public class DatabaseHelper {
     }
     public static boolean setWorkDB(String daySplit[],String cownum)
     {
-
         Log.d("workname table",daySplit[0] + " / " + daySplit[1] + " / " + daySplit[2] + " / " + daySplit[3] + " / " + daySplit[4] + " / " + daySplit[5]);
 
         db.execSQL("update " + workname + " set year = '" + daySplit[0] +
@@ -173,7 +176,6 @@ public class DatabaseHelper {
                 "' where cownumber = '" + cownum + "';" );
         db.execSQL("update " + workname + " set simplememo = '" + daySplit[5] +
                 "' where cownumber = '" + cownum + "';" );
-
 
         Log.d(null,"Update Db " + workname);
         return true;
@@ -198,4 +200,21 @@ public class DatabaseHelper {
 
         Log.d(null,"Update Db " + workname);
     }
+    /*
+    public static Cursor SearchData(String tablename,String searchContent)
+    {
+        Cursor returnCursor = null;
+        if(tablename==workname)
+        {
+            String aSQL = "select cownumber, year, month, day, hour, min, simplememo, resetNum"
+                    + " from " + tablename
+                    + " where cownumber like ?";
+            String[] args = {searchContent};
+
+            returnCursor = db.rawQuery(aSQL, args);
+            return (returnCursor);
+        }
+
+        return returnCursor;
+    }*/
 }

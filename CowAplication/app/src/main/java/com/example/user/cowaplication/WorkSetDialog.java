@@ -22,6 +22,7 @@ public class WorkSetDialog extends Dialog implements View.OnTouchListener{
     private Button minup,mindown;
     private TextView yearText;
     private EditText Memo;
+    String showyear;
     String year;
     Button ok_btn;
     Toast toast;
@@ -33,11 +34,22 @@ public class WorkSetDialog extends Dialog implements View.OnTouchListener{
     public WorkSetDialog(Context context, String str_yearday)
     {
         super(context);
+        String split[]=str_yearday.split("//");
+        showyear = split[0]+"/"+split[1]+"/"+split[2];
         year = str_yearday;
     }
     public String retunContent()
     {
-        String return_str = yearText.getText().toString() + hour.getText().toString() + "//" + min.getText().toString() + "//" + Memo.getText().toString();
+        Log.d(null,"메모 확인");
+        if( Memo.getText().toString().compareTo("")==0)
+        {
+            Log.d(null,"메모가 비었음");
+            Memo.setText("없음");
+        }
+
+        String return_str = year + hour.getText().toString() + "//" + min.getText().toString() + "//" + Memo.getText().toString();
+        Log.d("retunContent",return_str);
+
         return return_str;
     }
 
@@ -62,7 +74,8 @@ public class WorkSetDialog extends Dialog implements View.OnTouchListener{
 
         minup.setOnTouchListener(this);
         mindown.setOnTouchListener(this);
-        yearText.setText(year);
+        yearText.setText(showyear);
+        Memo.setText("");
 
         ok_btn.setOnClickListener(new View.OnClickListener() {
             @Override

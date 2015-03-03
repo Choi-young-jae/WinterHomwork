@@ -29,9 +29,9 @@ public class CowDetailView extends FragmentActivity{
     TextView sexMsg; //list로 부터 받아온 성별
     TextView birthdayMsg; //list로 부터 받아온 출생일
     TextView setwork; //일정을 등록할 부분이다.
+    Button cancelbtn;
     WorkSetDialog SetDateDialog;
     Bundle findbundle;
-
 
     public static final int REQUEST_CODE_DETAIL = 1003;
     public static final int REQUEST_CODE_FAMILY = 1008;
@@ -50,7 +50,7 @@ public class CowDetailView extends FragmentActivity{
         sexMsg = (TextView)findViewById(R.id.sexspace);
         birthdayMsg = (TextView)findViewById(R.id.birthdayspace);
         setwork = (TextView)findViewById(R.id.setWork);
-
+        cancelbtn = (Button)findViewById(R.id.daycancel_btn);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -76,17 +76,16 @@ public class CowDetailView extends FragmentActivity{
         Intent intent = new Intent(CowDetailView.this,
                 AlarmReceive.class);
         Bundle bundle = new Bundle();
+        bundle.putString("data0",locationMsg.getText().toString());
         bundle.putString("data1",numberMsg.getText().toString());
         bundle.putString("data2",sexMsg.getText().toString());
         bundle.putString("data3",birthdayMsg.getText().toString());
-        bundle.putString("data0",locationMsg.getText().toString());
         bundle.putInt("alarmnum",ALARMCOUNT);
 
         Log.d("Alram input",numberMsg.getText().toString() + " " + sexMsg.getText().toString() + " " +birthdayMsg.getText().toString()
          + " " + locationMsg.getText().toString());
 
         DatabaseHelper.setWorkDB(daysplit,numberMsg.getText().toString());
-
         intent.putExtras(bundle);
 
         PendingIntent pIntent = PendingIntent.getBroadcast(context, ALARMCOUNT, intent, 0);
@@ -137,8 +136,7 @@ public class CowDetailView extends FragmentActivity{
         String memos = outCoursor.getString(memoCol);
         Log.d("detail memos  ",memos);
 
-        txtMsg1.setText("\n");
-        txtMsg1.append(details);
+        txtMsg1.setText(details);
         txtMsg2.setText(memos);
         outCoursor.close();
     }
@@ -232,7 +230,6 @@ public class CowDetailView extends FragmentActivity{
             if (resultCode == RESULT_OK) {
                 Bundle bundle = intent.getExtras();
                 Log.d(null,"onActivityResult()");
-
                 printString(bundle);
             }
         }
@@ -262,12 +259,13 @@ public class CowDetailView extends FragmentActivity{
                                 Integer.valueOf(DaySplit[2]) + " / "  + Integer.valueOf(DaySplit[3])+ " / " +  Integer.valueOf(DaySplit[4]));
 
                         setAlarm(CowDetailView.this, calendar,DaySplit);
+                        Log.d(null,"알람 설정 완료");
                         setwork.setText(SetDateDialog.retunContent());
                     }
                     catch(Exception e)
                     {
-                        Toast.makeText(CowDetailView.this,"메모를 입력해 주세요",Toast.LENGTH_LONG).show();
-                        SetDateDialog.show();
+                        Toast.makeText(CowDetailView.this,"취소하셧습니다.",Toast.LENGTH_LONG).show();
+                        //SetDateDialog.show();
                     }
 
                     }
@@ -275,6 +273,60 @@ public class CowDetailView extends FragmentActivity{
 
             }
         }
+    }
+    /*
+    public void cancelAlram()
+    {
+        Calendar calendar = Calendar.getInstance();
+
+        Log.i(TAG, "setAlarm()");
+        AlarmManager alarmManager = (AlarmManager)CowDetailView.this.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(CowDetailView.this,
+                AlarmReceive.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("data0",locationMsg.getText().toString());
+        bundle.putString("data1",numberMsg.getText().toString());
+        bundle.putString("data2",sexMsg.getText().toString());
+        bundle.putString("data3",birthdayMsg.getText().toString());
+        bundle.putInt("alarmnum",ALARMCOUNT);
+
+        Log.d("Alram cancel",numberMsg.getText().toString() + " " + sexMsg.getText().toString() + " " +birthdayMsg.getText().toString()
+                + " " + locationMsg.getText().toString());
+
+        DatabaseHelper.resetWork(numberMsg.getText().toString());
+        intent.putExtras(bundle);
+
+        PendingIntent pIntent = PendingIntent.getBroadcast(CowDetailView.this, ALARMCOUNT, intent, 0);
+        alarmManager.cancel(pIntent);
+        ALARMCOUNT--;
+    }
+    public void showCancelbtn()
+    {
+        Cursor cursor = DatabaseHelper.SearchData(DatabaseHelper.workname,numberMsg.getText().toString());
+        int yesnocol = cursor.getColumnIndex("resetNum");
+
+        String yesno_str = cursor.getString(yesnocol);
+        Log.d(null,yesno_str);
+
+        if(yesno_str.compareTo("YES")==0)
+        {
+            cancelbtn.setVisibility(View.VISIBLE);
+        }
+        else
+            cancelbtn.setVisibility(View.GONE);
+    }
+
+    public void onAlramCancel(View v)
+    {
+        cancelAlram();
+        cancelbtn.setVisibility(View.GONE);
+    }*/
+    @Override
+    public void onBackPressed()
+    {
+        Log.d(null,"BackButtonPressed");
+        setResult(RESULT_OK);
+        finish();
     }
 
 

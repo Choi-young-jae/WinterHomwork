@@ -20,39 +20,68 @@ public class AlarmReceive extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // TODO Auto-generated method stub
 
-        Bundle bundle = intent.getExtras();
+        DatabaseHelper.openDatabase(DatabaseHelper.dbname);
 
-        int getalarmnum = bundle.getInt("alarmnum");
+        try{
 
-        Log.d(null,"Alram return " + getalarmnum + "!");
-        Log.d("Get data",bundle.getString("data0") + " " + bundle.getString("data1") + " " + bundle.getString("data2") +" " +  bundle.getString("data3"));
+            Bundle bundle = intent.getExtras();
 
-        Toast.makeText(context, "Alarm Received!", Toast.LENGTH_LONG).show();
-        NotificationManager notifier = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+            int getalarmnum = bundle.getInt("alarmnum");
 
-        Notification notify = new Notification(android.R.drawable.btn_star, "text",
-                System.currentTimeMillis());
+            Log.d(null,"Alram return " + getalarmnum + "!");
+            Log.d("Get data",bundle.getString("data0") + " " + bundle.getString("data1") + " " + bundle.getString("data2") +" " +  bundle.getString("data3"));
 
-        Intent intent2 = new Intent(context, CowDetailView.class);
+            DatabaseHelper.db.execSQL("update " + DatabaseHelper.workname + " set resetNum = 'YES' where cownumber = '" + bundle.getString("data1") + "';");
 
-        intent2.putExtras(bundle);
+            Toast.makeText(context, "Alarm Received!", Toast.LENGTH_LONG).show();
+            NotificationManager notifier = (NotificationManager) context
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent pender = PendingIntent
-                .getActivity(context, getalarmnum, intent2, 0);
+            Notification notify = new Notification(android.R.drawable.btn_star, "text",
+                    System.currentTimeMillis());
 
-        Log.d("alarmcount ",getalarmnum + "");
-        getalarmnum++;
+            Intent intent2 = new Intent(context,CowDetailView.class);
 
-        notify.setLatestEventInfo(context, bundle.getString("data0"), bundle.getString("data1"), pender);
+            intent2.putExtras(bundle);
 
-        DatabaseHelper.db.execSQL("update " + DatabaseHelper.workname + " set resetNum = 'YES' where cownumber = '" + bundle.getString("data1") + "';");
+            PendingIntent pender = PendingIntent.getActivity(context, getalarmnum, intent2, 0);
 
-        notify.flags |= Notification.FLAG_AUTO_CANCEL;
-        notify.vibrate = new long[] { 200, 200, 500, 300 };
-        // notify.sound=Uri.parse("file:/");
-        notify.number++;
-        notifier.notify(getalarmnum, notify);
+            Log.d("alarmcount ",getalarmnum + "");
+            getalarmnum++;
+
+            notify.setLatestEventInfo(context, bundle.getString("data0"), bundle.getString("data1"), pender);
+            notify.flags |= Notification.FLAG_AUTO_CANCEL;
+            notify.vibrate = new long[] { 200, 200, 500, 300 };
+            // notify.sound=Uri.parse("file:/");
+            notify.number++;
+            notifier.notify(getalarmnum, notify);
+        }
+        catch(Exception e)
+        {
+            Log.d("Eroor...",e.toString());
+            NotificationManager notifier = (NotificationManager) context
+                    .getSystemService(Context.NOTIFICATION_SERVICE);
+
+            Toast.makeText(context, "DB가 이동되거나 삭제된것 같습니다.", Toast.LENGTH_LONG).show();
+            Notification notify = new Notification(android.R.drawable.btn_star, "text",
+                    System.currentTimeMillis());
+
+            Intent intent2 = new Intent(context, MainActivity.class);
+            PendingIntent pender = PendingIntent
+                    .getActivity(context, getalarmnum, intent2, 0);
+
+            Log.d("alarmcount ",getalarmnum + "");
+            getalarmnum++;
+
+            notify.setLatestEventInfo(context,"DB에러", "목록을 확인해 주세요.", pender);
+            notify.flags |= Notification.FLAG_AUTO_CANCEL;
+            notify.vibrate = new long[] { 200, 200, 500, 300 };
+            // notify.sound=Uri.parse("file:/");
+            notify.number++;
+            notifier.notify(getalarmnum, notify);
+        }
+
+        DatabaseHelper.closeDatabase();
     }
 
 }

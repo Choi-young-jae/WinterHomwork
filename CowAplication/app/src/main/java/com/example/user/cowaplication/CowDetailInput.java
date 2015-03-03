@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 /**
  * Created by user on 2015-02-15.
@@ -18,9 +21,10 @@ public class CowDetailInput extends Activity {
     EditText txtMsg2_input;
     EditText numberMsg_input;
     EditText locationMsg_input;
-    EditText sexMsg_input;
-    EditText birthdayMsg_input;
+    TextView birthdayMsg_input;
     Button modifyok_btn;
+    RadioGroup sex_input;
+    RadioButton male,female;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,9 +34,11 @@ public class CowDetailInput extends Activity {
         txtMsg2_input = (EditText)findViewById(R.id.txtMsg2_input);
         locationMsg_input = (EditText)findViewById(R.id.locationspace_input);
         numberMsg_input = (EditText)findViewById(R.id.numberspace_input);
-        sexMsg_input = (EditText)findViewById(R.id.sexspace_input);
-        birthdayMsg_input = (EditText)findViewById(R.id.birthdayspace_input);
+        sex_input = (RadioGroup)findViewById(R.id.radioGroup_detail);
+        birthdayMsg_input = (TextView)findViewById(R.id.birthdayspace_input);
         modifyok_btn = (Button)findViewById(R.id.modify_ok);
+        male = (RadioButton)findViewById(R.id.radioButton_detail);
+        female = (RadioButton)findViewById(R.id.radioButton2_detail);
 
         Log.d("input text", "input ");
         Intent intent = getIntent();
@@ -48,15 +54,22 @@ public class CowDetailInput extends Activity {
         println(locationString + " // " + numberString + " // " + sexString + " // " + birthdayString);
         locationMsg_input.setText(locationString);
         numberMsg_input.setText(numberString);
-        sexMsg_input.setText(sexString);
         birthdayMsg_input.setText(birthdayString);
         txtMsg1_input.setText(detailString);
         txtMsg2_input.setText(memoString);
-
+        if(sexString.compareTo("수")==0) male.setChecked(true);
+        else female.setChecked(true);
     }
 
     public void println(String msg) {
         Log.d(TAG, msg);
+    }
+
+    public void onDatedetailClicked(View v)
+    {
+        Intent intent = new Intent(getBaseContext(), ShowCalendar.class);
+        startActivityForResult(intent, CowAdd.REQUEST_CODE_CALENDAR);
+        Log.d(null,"return to ondate Clicked");
     }
 
     public void ModifyOkButtonClicked(View v)
@@ -73,10 +86,18 @@ public class CowDetailInput extends Activity {
         String detailString = bundle.getString("detail");
         String memoString = bundle.getString("memo");
 
-
+        String sexMsg_input;
+        if(sex_input.getCheckedRadioButtonId() == R.id.radioButton_detail)
+        {
+            sexMsg_input = "수";
+        }
+        else
+        {
+            sexMsg_input = "암";
+        }
 
         DatabaseHelper.modifyTable(new listdata(locationString,numberString,birthdayString,sexString),
-                new listdata(locationMsg_input.getText().toString(),numberMsg_input.getText().toString(),birthdayMsg_input.getText().toString(),sexMsg_input.getText().toString()));
+                new listdata(locationMsg_input.getText().toString(),numberMsg_input.getText().toString(),birthdayMsg_input.getText().toString(),sexMsg_input));
 
         DatabaseHelper.modifyDetail(numberString,numberMsg_input.getText().toString(),txtMsg1_input.getText().toString(),txtMsg2_input.getText().toString());
 
@@ -86,7 +107,7 @@ public class CowDetailInput extends Activity {
         Bundle inputbundle = new Bundle();
         inputbundle.putString("data0",locationMsg_input.getText().toString());
         inputbundle.putString("data1",numberMsg_input.getText().toString());
-        inputbundle.putString("data2",sexMsg_input.getText().toString());
+        inputbundle.putString("data2",sexMsg_input);
         inputbundle.putString("data3",birthdayMsg_input.getText().toString());
 
         resultIntent.putExtras(inputbundle);
@@ -94,5 +115,21 @@ public class CowDetailInput extends Activity {
         setResult(RESULT_OK, resultIntent);
         finish();
 
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        Log.d(null,"Return DB changed");
+
+        if (requestCode == CowAdd.REQUEST_CODE_CALENDAR) {
+
+            if (resultCode == RESULT_OK) {
+                Bundle bundle = intent.getExtras();
+                Log.d(null,"REQUEST_CODE_CALENDAR()");
+                String day_str = bundle.getString("returnday");
+                String[] datesplit = day_str.split("//");
+                birthdayMsg_input.setText(datesplit[0]+ " / " + datesplit[1] + " / " + datesplit[2]);
+            }
+        }
     }
 }

@@ -34,26 +34,52 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:text="성별 : "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <EditText
-            android:id="@+id/sexspace_input"
+        <LinearLayout
+            android:id="@+id/sexlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_below="@+id/numberlayout"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="성별"
+                android:id="@+id/textView3"
+                />
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/textView3"
+                android:orientation="horizontal"
+                android:id="@+id/radioGroup_detail">
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="암"
+                    android:id="@+id/radioButton_detail" />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="수"
+                    android:id="@+id/radioButton2_detail" />
+            </RadioGroup>
+        </LinearLayout>
+
         <TextView
             android:text="출생일 : "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
-        <EditText
+        <TextView
             android:id="@+id/birthdayspace_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:onClick="onDatedetailClicked"/>
     </LinearLayout>
 
     <TextView
