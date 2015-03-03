@@ -20,10 +20,8 @@ public class AlarmReceive extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // TODO Auto-generated method stub
 
-        DatabaseHelper.openDatabase(DatabaseHelper.dbname);
-
         try{
-
+            DatabaseHelper.openDatabase(DatabaseHelper.workname);
             Bundle bundle = intent.getExtras();
 
             int getalarmnum = bundle.getInt("alarmnum");
@@ -44,7 +42,7 @@ public class AlarmReceive extends BroadcastReceiver {
 
             intent2.putExtras(bundle);
 
-            PendingIntent pender = PendingIntent.getActivity(context, getalarmnum, intent2, 0);
+            PendingIntent pender = PendingIntent.getActivity(context, getalarmnum, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
             Log.d("alarmcount ",getalarmnum + "");
             getalarmnum++;
@@ -68,7 +66,7 @@ public class AlarmReceive extends BroadcastReceiver {
 
             Intent intent2 = new Intent(context, MainActivity.class);
             PendingIntent pender = PendingIntent
-                    .getActivity(context, getalarmnum, intent2, 0);
+                    .getActivity(context, getalarmnum, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
             Log.d("alarmcount ",getalarmnum + "");
             getalarmnum++;
@@ -80,8 +78,10 @@ public class AlarmReceive extends BroadcastReceiver {
             notify.number++;
             notifier.notify(getalarmnum, notify);
         }
+        finally {
+            DatabaseHelper.closeDatabase();
+        }
 
-        DatabaseHelper.closeDatabase();
     }
 
 }

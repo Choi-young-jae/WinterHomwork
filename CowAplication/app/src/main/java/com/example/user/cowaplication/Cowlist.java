@@ -47,6 +47,7 @@ public class Cowlist extends Activity{
             DatabaseHelper.createDetailTable(); //createDetail
             DatabaseHelper.createWorktable(); //createWork
             showAllcontent(); //show content in table
+            DatabaseHelper.closeDatabase();
         } catch(Exception ex) {
             ex.printStackTrace();
             Toast toast2 = Toast.makeText(this,"database is not created.",Toast.LENGTH_LONG);
@@ -161,6 +162,10 @@ public class Cowlist extends Activity{
     //DB의 내용을 전부 출력시켜주는 함수이다.
     public void showAllcontent()
     {
+        DatabaseHelper.openDatabase(DatabaseHelper.dbname);
+        DatabaseHelper.openDatabase(DatabaseHelper.detailname);
+        DatabaseHelper.openDatabase(DatabaseHelper.workname);
+
         Log.d("SelectName" , "name");
         String aSQL = "select location, number,sex,birthday  from " + DatabaseHelper.tablename;
         Cursor cursor = DatabaseHelper.db.query(DatabaseHelper.tablename,null,null,null,null,null,null);
@@ -175,5 +180,7 @@ public class Cowlist extends Activity{
             list.setAdapter(adapter);
             cursor.moveToNext();
         }
+        cursor.close();
+        DatabaseHelper.closeDatabase();
     }
 }

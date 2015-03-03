@@ -1,5 +1,6 @@
 package com.example.user.cowaplication;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
@@ -98,6 +99,10 @@ public class DatabaseHelper {
     }
     public static boolean insertData(listdata insertdata)
     {
+        openDatabase(tablename);
+        openDatabase(detailname);
+        openDatabase(workname);
+
         String none = "내용을 입력해 주세요.";
         String nowork = "지금은 일정이 없어요.";
         String test = "---";
@@ -125,12 +130,14 @@ public class DatabaseHelper {
     public static boolean deleteData(listdata deletedata)
     {
         String delnum = deletedata.number;
+        openDatabase(tablename);
         openDatabase(detailname);
         openDatabase(workname);
 
         db.delete(tablename,"number=?",new String[]{delnum});
         db.delete(detailname,"number=?",new String[]{delnum});
         db.delete(workname,"cownumber=?",new String[]{delnum});
+        closeDatabase();
 
         return true;
     }
@@ -200,7 +207,7 @@ public class DatabaseHelper {
 
         Log.d(null,"Update Db " + workname);
     }
-    /*
+
     public static Cursor SearchData(String tablename,String searchContent)
     {
         Cursor returnCursor = null;
@@ -216,5 +223,5 @@ public class DatabaseHelper {
         }
 
         return returnCursor;
-    }*/
+    }
 }

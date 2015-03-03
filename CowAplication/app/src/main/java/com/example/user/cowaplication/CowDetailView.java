@@ -38,26 +38,38 @@ public class CowDetailView extends FragmentActivity{
     public static final int REQUEST_CODE_CALENDAR = 1000;
 
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cowdetail);
 
-        DatabaseHelper.openDatabase(DatabaseHelper.dbname);
+        try{
+            DatabaseHelper.openDatabase(DatabaseHelper.dbname);
+            DatabaseHelper.openDatabase(DatabaseHelper.detailname);
+            DatabaseHelper.openDatabase(DatabaseHelper.workname);
 
-        txtMsg1 = (TextView)findViewById(R.id.txtMsg1);
-        txtMsg2 = (TextView)findViewById(R.id.txtMsg2);
-        locationMsg = (TextView)findViewById(R.id.locationspace);
-        numberMsg = (TextView)findViewById(R.id.numberspace);
-        sexMsg = (TextView)findViewById(R.id.sexspace);
-        birthdayMsg = (TextView)findViewById(R.id.birthdayspace);
-        setwork = (TextView)findViewById(R.id.setWork);
-        cancelbtn = (Button)findViewById(R.id.daycancel_btn);
+            txtMsg1 = (TextView)findViewById(R.id.txtMsg1);
+            txtMsg2 = (TextView)findViewById(R.id.txtMsg2);
+            locationMsg = (TextView)findViewById(R.id.locationspace);
+            numberMsg = (TextView)findViewById(R.id.numberspace);
+            sexMsg = (TextView)findViewById(R.id.sexspace);
+            birthdayMsg = (TextView)findViewById(R.id.birthdayspace);
+            setwork = (TextView)findViewById(R.id.setWork);
+            cancelbtn = (Button)findViewById(R.id.daycancel_btn);
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        printString(bundle);
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            printString(bundle);
+        }
+        catch(Exception e)
+        {
+            Log.d("DB열기 에러",e.toString());
+        }
+        finally {
+            DatabaseHelper.closeDatabase();
+        }
+
 
         Button daysetbutton = (Button)findViewById(R.id.dayset_btn);
-
         //일정 등록 버튼을 눌렀을 경우.
         daysetbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +83,7 @@ public class CowDetailView extends FragmentActivity{
     // 알람 등록
     private void setAlarm(Context context, Calendar calendar,String daysplit[])
     {
+        DatabaseHelper.openDatabase(DatabaseHelper.workname);
         Log.i(TAG, "setAlarm()");
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(CowDetailView.this,
@@ -91,6 +104,7 @@ public class CowDetailView extends FragmentActivity{
         PendingIntent pIntent = PendingIntent.getBroadcast(context, ALARMCOUNT, intent, 0);
         alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pIntent);
         ALARMCOUNT++;
+        DatabaseHelper.closeDatabase();
 
     }
 
@@ -117,28 +131,35 @@ public class CowDetailView extends FragmentActivity{
                 + " from " + DatabaseHelper.detailname
                 + " where number = ?";
 
-
         String[] args = {numberMsg.getText().toString()};
         Log.d("detail number = ",numberMsg.getText().toString());
-
         Cursor outCoursor = DatabaseHelper.db.rawQuery(aSQL,args);
 
-        outCoursor.moveToFirst();
+        try
+        {    outCoursor.moveToFirst();
 
-        int detailCol = outCoursor.getColumnIndex("detail");
-        Log.d("detail col",detailCol + "");
-        int memoCol = outCoursor.getColumnIndex("memo");
-        Log.d("memo col",memoCol + "");
+            int detailCol = outCoursor.getColumnIndex("detail");
+            Log.d("detail col",detailCol + "");
+            int memoCol = outCoursor.getColumnIndex("memo");
+            Log.d("memo col",memoCol + "");
 
-        outCoursor.moveToFirst();
-        String details = outCoursor.getString(detailCol);
-        Log.d("detail String  ",details);
-        String memos = outCoursor.getString(memoCol);
-        Log.d("detail memos  ",memos);
+            outCoursor.moveToFirst();
+            String details = outCoursor.getString(detailCol);
+            Log.d("detail String  ",details);
+            String memos = outCoursor.getString(memoCol);
+            Log.d("detail memos  ",memos);
 
-        txtMsg1.setText(details);
-        txtMsg2.setText(memos);
-        outCoursor.close();
+            txtMsg1.setText(details);
+            txtMsg2.setText(memos);
+        }
+        catch(Exception e)
+        {
+            Log.d("detailInput cursor error...",e.toString());
+        }
+        finally {
+            outCoursor.close();
+        }
+
     }
     public void workinput()
     {
@@ -274,7 +295,7 @@ public class CowDetailView extends FragmentActivity{
             }
         }
     }
-    /*
+
     public void cancelAlram()
     {
         Calendar calendar = Calendar.getInstance();
@@ -314,16 +335,19 @@ public class CowDetailView extends FragmentActivity{
         }
         else
             cancelbtn.setVisibility(View.GONE);
+
+        cursor.close();
     }
 
     public void onAlramCancel(View v)
     {
         cancelAlram();
         cancelbtn.setVisibility(View.GONE);
-    }*/
+    }
     @Override
     public void onBackPressed()
     {
+        DatabaseHelper.closeDatabase();
         Log.d(null,"BackButtonPressed");
         setResult(RESULT_OK);
         finish();
