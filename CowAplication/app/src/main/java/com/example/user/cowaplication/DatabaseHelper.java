@@ -210,18 +210,23 @@ public class DatabaseHelper {
 
     public static Cursor SearchData(String tablename,String searchContent)
     {
+        Log.d("SearchData","찾기 모드");
+
         Cursor returnCursor = null;
-        if(tablename==workname)
+
+        if(tablename.compareTo(workname)==0)
         {
+            Log.d("SearchData","커서 찾기");
             String aSQL = "select cownumber, year, month, day, hour, min, simplememo, resetNum"
                     + " from " + tablename
                     + " where cownumber like ?";
             String[] args = {searchContent};
 
             returnCursor = db.rawQuery(aSQL, args);
-            return (returnCursor);
+            return returnCursor;
         }
 
+        Log.d("SearchData","리턴 오류");
         return returnCursor;
     }
 }
