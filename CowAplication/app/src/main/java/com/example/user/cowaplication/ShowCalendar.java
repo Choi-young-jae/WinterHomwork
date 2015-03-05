@@ -27,8 +27,8 @@ public class ShowCalendar extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         savebundle = savedInstanceState;
-
         ViewCalendar();
+
     }
 
     //달력 출력 관련 부분
@@ -81,21 +81,9 @@ public class ShowCalendar extends FragmentActivity {
                 Bundle daybundle = new Bundle();
                 daybundle.putString("returnday",dat_str);
                 resultIntent.putExtras(daybundle);
-
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }
-
-            /*@Override
-            public void onCaldroidViewCreated() {
-                if (caldroidFragment.getLeftArrowButton() != null)
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Caldroid view is created", Toast.LENGTH_SHORT)
-                            .show();
-                }
-            }*/
-
         };
 
         setCustomResourceForDates();
@@ -155,4 +143,11 @@ public class ShowCalendar extends FragmentActivity {
         }
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        dialogCaldroidFragment.dismiss();
+        Log.d(null,"BackButtonPressed");
+        finish();
+    }
 }

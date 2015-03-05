@@ -19,7 +19,6 @@ public class AlarmReceive extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO Auto-generated method stub
-
         try{
             DatabaseHelper.openDatabase(DatabaseHelper.workname);
             Bundle bundle = intent.getExtras();
