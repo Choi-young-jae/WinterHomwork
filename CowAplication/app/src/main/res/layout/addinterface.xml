@@ -55,7 +55,8 @@
         android:id="@+id/sexlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/numberlayout">
+        android:layout_below="@+id/numberlayout"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -63,8 +64,6 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="성별"
             android:id="@+id/textView3"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"
             />
 
         <RadioGroup

@@ -76,7 +76,7 @@ public class FindFamily extends Activity {
 
                 Log.d("Split num",splitstr.length + "");
 
-                for(int j=0; j<splitstr.length; j++)
+                for(int j=0; j<((splitstr.length/10)+1)*10; j++)
                 {
                     if(j%10==0)
                     {
@@ -85,6 +85,11 @@ public class FindFamily extends Activity {
                         addlayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         addlayout.setOrientation(LinearLayout.HORIZONTAL);
                         layoutfirst.addView(addlayout);
+                    }
+                    if(j>=splitstr.length)
+                    {
+                        setTexttotable("       ",addlayout);
+                        continue;
                     }
                     setTexttotable(splitstr[j],addlayout);
                 }

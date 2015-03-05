@@ -43,6 +43,7 @@ public class CowAdd extends Activity {
     {
         Intent intent = new Intent(getBaseContext(), ShowCalendar.class);
         startActivityForResult(intent, REQUEST_CODE_CALENDAR);
+
         Log.d(null,"return to ondate Clicked");
     }
 
