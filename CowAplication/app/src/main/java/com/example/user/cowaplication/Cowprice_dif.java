@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,13 +20,12 @@ import java.util.ArrayList;
  */
 public class Cowprice_dif extends Activity{
 
-    TextView textView;
+    TextView termView;
     public static final String TAG = "ParsingTest";
-    private String rssUrl;
-    private EditText edittext;
     private static Thread thread = null;
     private Source source_dif;
     private ArrayList<String> array;
+    private String inputStr = "http://www.ekapepia.com/user/priceStat/periodCowAuctionPrice.do";
     TextView tabletext;
     int curtableid = R.id.tabledif1;
 
@@ -38,41 +34,32 @@ public class Cowprice_dif extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cowprice_dif);
-        edittext = (EditText)findViewById(R.id.edit_dif);
-        edittext.setText("http://www.ekapepia.com/user/priceStat/periodCowAuctionPrice.do");
         Log.d(TAG, " onCreate");
-        Button show_btn = (Button) findViewById(R.id.show_btn);
-        show_btn.setOnClickListener(new View.OnClickListener() {
+        termView = (TextView)findViewById(R.id.termdate);
+        Runnable task = new Runnable() {
 
-            public void onClick(View v) {
-
-                Runnable task = new Runnable() {
-                    String inputStr = edittext.getText().toString();
-                    @Override
-                    public void run()
-                    {
-                        getData(inputStr);
-                    }
-                };
-                thread = new Thread(task);
-                thread.start();
-
-                try{
-                    thread.join();
-                }
-                catch(Exception e)
-                {
-                    Log.d(TAG,e.toString());
-                }
-                for(int i=0; i<array.size(); i++)
-                {
-                    tabletext = (TextView)findViewById(curtableid);
-                    tabletext.setText(array.get(i));
-                    curtableid++;
-                }
+            @Override
+            public void run()
+            {
+                getData(inputStr);
             }
+        };
+        thread = new Thread(task);
+        thread.start();
 
-        });
+        try{
+            thread.join();
+        }
+        catch(Exception e)
+        {
+            Log.d(TAG,e.toString());
+        }
+        for(int i=0; i<array.size(); i++)
+        {
+            tabletext = (TextView)findViewById(curtableid);
+            tabletext.setText(array.get(i));
+            curtableid++;
+        }
     }
     public ArrayList<String> getData(String strURL)
     {
@@ -90,6 +77,16 @@ public class Cowprice_dif extends Activity{
             int tr_count_dif = table_dif.getAllElements(HTMLElementName.TR).size();
             Log.d(TAG,  " Get tr" + tr_count_dif);
             Element tr_dif = null;
+
+            Element tr_termdate = (Element) table_dif.getAllElements(HTMLElementName.TR).get(0);
+
+            Log.d("P count",tr_termdate.getAllElements(HTMLElementName.P).size() +"");
+
+            String term1 = ((Element) tr_termdate.getAllElements(HTMLElementName.P).get(0)).getContent().toString();
+            String term2 = ((Element) tr_termdate.getAllElements(HTMLElementName.P).get(1)).getContent().toString();
+
+            String term = term1 + term2;
+            termView.setText(term);
 
             ArrayList<String> hm = null;
             for(int i=2; i<tr_count_dif; i++)
@@ -109,6 +106,7 @@ public class Cowprice_dif extends Activity{
         }
         catch(Exception e)
         {
+            Log.d("Exception err...",e.toString());
             Toast viewtoast = Toast.makeText(this,"Exceptoin Error... " ,Toast.LENGTH_LONG);
             viewtoast.show();
         }

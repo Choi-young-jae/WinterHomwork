@@ -11,22 +11,11 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         >
-        <EditText
-            android:id="@+id/edit_dif"
+        <TextView
+            android:id="@+id/termdate"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:width="200dp"
-            android:hint="인터넷 사이트 주소 입력 ..."
-            android:text=""
-            android:textSize="16dp"
-            />
-        <Button android:id="@+id/show_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text=" 조회하기 "
-            android:textSize="20dp"
-            />
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
     <HorizontalScrollView
         android:layout_width="wrap_content"

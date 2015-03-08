@@ -29,6 +29,7 @@ public class Cowlist extends Activity{
 
     public static final int REQUEST_CODE_ANOTHER = 1002;
     public static final int REQUEST_CODE_DETAIL = 1005;
+    public static final int REQUEST_CODE_SEARCH = 1006;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +107,12 @@ public class Cowlist extends Activity{
     {
         // 추가 버튼을 눌렀을 경우 소를 추가하는 화면을 보여줌.
         Intent intent = new Intent(getBaseContext(), CowAdd.class);
-        // 액티비티를 띄워주도록 startActivityForResult() 메소드를 호출합니다.
         startActivityForResult(intent, REQUEST_CODE_ANOTHER);
+    }
+    public void Onbutton3click(View v)
+    {
+        Intent intent = new Intent(getBaseContext(), CowSearch.class);
+        startActivityForResult(intent, REQUEST_CODE_SEARCH);
     }
 
     @Override

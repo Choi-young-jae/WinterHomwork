@@ -50,6 +50,12 @@
             android:layout_height="wrap_content"
             android:text="삭제하기"
             android:onClick="Onbutton2click"/>
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="검색하기"
+            android:onClick="Onbutton3click"/>
 
     </LinearLayout>
     <TextView

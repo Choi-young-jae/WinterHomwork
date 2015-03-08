@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +28,7 @@ public class Cowprice extends Activity{
     private static Thread thread = null;
     private Source source;
     private ArrayList<String> array;
+    private String inputStr = "http://www.ekapepia.com/user/priceStat/realTimeCowBody.do";
     TextView tabletext;
     int curtableid = R.id.table1;
     public static final int REQUEST_CODE_PRICEDIF = 1004;
@@ -40,45 +40,32 @@ public class Cowprice extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cowprice);
 
-        edittext = (EditText)findViewById(R.id.edit01);
-        //실시간 소의 가격을 불러올 주소이다.
-        edittext.setText("http://www.ekapepia.com/user/priceStat/realTimeCowBody.do");
         Log.d(TAG, " onCreate");
-        Button show_btn = (Button) findViewById(R.id.show_btn);
-        show_btn.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-
-                //쓰레드에 등록할 핸들러를 구현한다.
-                Runnable task = new Runnable() {
-                    String inputStr = edittext.getText().toString();
-                    @Override
-                    public void run()
-                    {
-                        getData(inputStr);
-                    }
-                };
-                Log.d(null,"treadstart");
-                thread = new Thread(task);
-                thread.start();
-
-                try{
-                    thread.join();
-                }
-                catch(Exception e)
-                {
-                    Log.d(TAG,e.toString());
-                }
-
-                for(int i=0; i<array.size(); i++)
-                {
-                    tabletext = (TextView)findViewById(curtableid); //해당하는 칸에 얻어온 숫자를 하나씩 기입한다.
-                    tabletext.setText(array.get(i));
-                    curtableid++;
-                }
+        Runnable task = new Runnable() {
+            @Override
+            public void run()
+            {
+                getData(inputStr);
             }
+        };
+        Log.d(null,"treadstart");
+        thread = new Thread(task);
+        thread.start();
 
-        });
+        try{
+            thread.join();
+        }
+        catch(Exception e)
+        {
+            Log.d(TAG,e.toString());
+        }
+
+        for(int i=0; i<array.size(); i++)
+        {
+            tabletext = (TextView)findViewById(curtableid); //해당하는 칸에 얻어온 숫자를 하나씩 기입한다.
+            tabletext.setText(array.get(i));
+            curtableid++;
+        }
     }
     public ArrayList<String> getData(String strURL)
     {

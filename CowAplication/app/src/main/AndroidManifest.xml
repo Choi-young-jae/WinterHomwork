@@ -28,6 +28,7 @@
         <activity android:name=".Cowprice_dif"/>
         <activity android:name=".FindFamily"/>
         <activity android:name=".ShowCalendar"/>
+        <activity android:name=".CowSearch"/>
 
         <receiver android:name=".AlarmReceive"
             android:label="returnAlram">
