@@ -225,8 +225,57 @@ public class DatabaseHelper {
             returnCursor = db.rawQuery(aSQL, args);
             return returnCursor;
         }
+        else if(tablename.compareTo(tablename)==0)
+        {
+            Log.d("SearchData","커서 찾기");
+            String aSQL = "select location, number, sex, birthday"
+                    + " from " + tablename
+                    + " where number like ?";
+            String[] args = {searchContent};
+
+            returnCursor = db.rawQuery(aSQL, args);
+            return returnCursor;
+        }
 
         Log.d("SearchData","리턴 오류");
+        return returnCursor;
+    }
+    public static Cursor SearchData(String tablename,String searchContent, int searchtype)
+    {
+        Log.d("SearchData","찾기 모드");
+
+        Cursor returnCursor = null;
+        String[] args = {searchContent};
+        if(searchtype ==0)
+        {
+            String aSQL = "select location, number, sex, birthday"
+                    + " from " + tablename
+                    + " where location like ?";
+            returnCursor = db.rawQuery(aSQL, args);
+        }
+        else if(searchtype==1)
+        {
+            String aSQL = "select location, number, sex, birthday"
+                    + " from " + tablename
+                    + " where number like ?";
+            returnCursor = db.rawQuery(aSQL, args);
+        }
+        else if(searchtype==2)
+        {
+            String aSQL = "select location, number, sex, birthday"
+                    + " from " + tablename
+                    + " where sex like ?";
+            returnCursor = db.rawQuery(aSQL, args);
+        }
+        else
+        {
+            String aSQL = "select location, number, sex, birthday"
+                    + " from " + tablename
+                    + " where birthday like ?";
+            returnCursor = db.rawQuery(aSQL, args);
+        }
+
+        Log.d("SearchData","커서 찾기");
         return returnCursor;
     }
 }

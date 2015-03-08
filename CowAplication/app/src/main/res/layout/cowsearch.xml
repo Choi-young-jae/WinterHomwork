@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioGroup
+            android:id="@+id/typeRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/locationRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="축사위치로"/>
+            <RadioButton
+                android:id="@+id/numberRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="번호로"/>
+            <RadioButton
+                android:id="@+id/sexRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="성별로"/>
+            <RadioButton
+                android:id="@+id/dateRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="태어난 날짜로"
+                android:onClick="onDateSearch"/>
+            </RadioGroup>
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:hint="검색어를 입력해 주세요"
+            android:id="@+id/searchcontent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:text="검색"
+            android:id="@+id/searchbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="축사 위치"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="관리 번호"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="성별"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding ="15dp"
+            android:text="출생일"/>
+    </LinearLayout>
+    <ListView
+        android:id="@+id/showcowlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

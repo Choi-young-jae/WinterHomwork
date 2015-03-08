@@ -2,6 +2,7 @@ package com.example.user.cowaplication;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by user on 2015-02-15.
@@ -50,19 +52,14 @@ public class CowAdd extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -71,38 +68,51 @@ public class CowAdd extends Activity {
     }
     public void onSaveButtonClicked(View v)
     {
-        Intent resultIntent = new Intent();
-
-        if(sex.getCheckedRadioButtonId() == R.id.radioButton)
-        {
-            convert_sex = "암";
+        DatabaseHelper.openDatabase(DatabaseHelper.tablename);
+        Cursor searchcursor = DatabaseHelper.SearchData(DatabaseHelper.tablename,number.getText().toString());
+        searchcursor.moveToFirst();
+        try{
+            //예외가 캐치 되는 경우는 데이터 베이스에 저장이 되지 않은 경우 이므로 예외일 경우 데이터 베이스에 저장한다.
+            Log.d("Cursor in or not?",searchcursor.getString(1));
+            Toast.makeText(this, "이미 저장되어있는 번호입니다.", Toast.LENGTH_LONG).show();
+            Log.d("Cursor","있는 정보입니다.");
         }
-        else
+        catch(IndexOutOfBoundsException e)
         {
-            convert_sex = "수";
+            Log.d("Exception!",e.toString());
+            Intent resultIntent = new Intent();
+            if(sex.getCheckedRadioButtonId() == R.id.radioButton)
+            {
+                convert_sex = "암";
+            }
+            else
+            {
+                convert_sex = "수";
+            }
+
+            Log.d("Add intent save","save start");
+
+            resultIntent.putExtra("location", locatoin.getText().toString());
+            Log.d("Add location save",locatoin.getText().toString());
+
+            resultIntent.putExtra("number", number.getText().toString());
+            Log.d("Add number save",number.getText().toString());
+
+
+            resultIntent.putExtra("sex",convert_sex);
+            Log.d("Add sex save",convert_sex);
+
+            resultIntent.putExtra("birthday", birthday.getText().toString());
+            Log.d("Add birhday save",birthday.getText().toString());
+            //resultIntent.putStringArrayListExtra("data",)
+            // 응답을 전달하고 이 액티비티를 종료합니다.
+            setResult(RESULT_OK, resultIntent);
+            finish();
         }
-
-        Log.d("Add intent save","save start");
-        /*Log.d("Add intent save",locatoin.getText().toString() + " / " +number.getText().toString() +
-                " / " + convert_sex + " / " +  birthday.getText().toString());*/
-
-        resultIntent.putExtra("location", locatoin.getText().toString());
-        Log.d("Add location save",locatoin.getText().toString());
-
-        resultIntent.putExtra("number", number.getText().toString());
-        Log.d("Add number save",number.getText().toString());
-
-
-        resultIntent.putExtra("sex",convert_sex);
-        Log.d("Add sex save",convert_sex);
-
-        resultIntent.putExtra("birthday", birthday.getText().toString());
-        Log.d("Add birhday save",birthday.getText().toString());
-        //resultIntent.putStringArrayListExtra("data",)
-
-        // 응답을 전달하고 이 액티비티를 종료합니다.
-        setResult(RESULT_OK, resultIntent);
-        finish();
+        finally {
+            searchcursor.close();
+            DatabaseHelper.closeDatabase();
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
